@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,14 +23,14 @@ import androidx.compose.ui.unit.sp
 @Preview(showBackground = true)
 @Composable
 fun NoteTemplate(
-
+    color : Color = MaterialTheme.colorScheme.inverseSurface
 ) {
     Column(
         modifier = Modifier
             .height(280.dp)
             .padding(5.dp)
             .clip(RoundedCornerShape(30.dp))
-            .background(Color.Cyan)
+            .background(color)
             .padding(10.dp)
 //            .verticalScroll(rememberScrollState())
 
