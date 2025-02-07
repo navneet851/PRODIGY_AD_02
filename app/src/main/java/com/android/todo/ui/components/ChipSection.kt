@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,24 +38,22 @@ data class Chip(
 fun ChipSection(
     chips: List<Chip>
 ) {
-    Row(
+    LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .height(70.dp)
     ) {
-        repeat(chips.size) {
-            val offsetY by animateDpAsState(if (chips[it].selected) (-4).dp else 0.dp)
+        items(chips.size) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .padding(4.dp)
-                    .offset(y = offsetY)
-                    .border(1.dp, if(chips[it].selected) Color.White else MaterialTheme.colorScheme.inverseSurface, RoundedCornerShape(50))
-                    .padding(10.dp)
+                    .border(1.dp, if(chips[it].selected) Color.White else Color.DarkGray, RoundedCornerShape(50))
+                    .padding(12.dp, 10.dp)
             ) {
-                Text(text = chips[it].text, color = if(chips[it].selected) Color.White else MaterialTheme.colorScheme.inverseSurface)
+                Text(text = chips[it].text, color = if(chips[it].selected) Color.White else Color.DarkGray)
                 if (chips[it].selected) {
                     Spacer(Modifier.width(10.dp))
                     Box(
@@ -63,7 +62,7 @@ fun ChipSection(
                             .height(22.dp)
                             .width(22.dp)
                             .clip(RoundedCornerShape(50))
-                            .background(MaterialTheme.colorScheme.inverseSurface)
+                            .background(Color.DarkGray)
                     ) {
                         Text(
                             color = Color.White,

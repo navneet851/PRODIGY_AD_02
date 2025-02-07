@@ -37,7 +37,10 @@ fun HomeScreen() {
         var chips = listOf(
             Chip("All", true, 20),
             Chip("Work", false, 15),
-            Chip("Personal", false, 34)
+            Chip("Personal", false, 34),
+            Chip("Personal", false, 34),
+            Chip("Personal", false, 34),
+            Chip("0", false, 34)
         )
 
         val colors = listOf(CustomOrange, CustomYellow, CustomGreen, CustomBlue, CustomLightYellow)
