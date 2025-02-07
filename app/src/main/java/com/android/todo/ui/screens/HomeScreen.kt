@@ -27,7 +27,7 @@ import com.android.todo.ui.theme.CustomYellow
 
 @Preview()
 @Composable
-private fun HomeScreen() {
+fun HomeScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -45,7 +45,7 @@ private fun HomeScreen() {
         Text(
             modifier = Modifier.padding(16.dp),
             fontSize = 50.sp,
-            text = "My \nNotes",
+            text = "My \n\nNotes",
             color = Color.White,
             fontWeight = FontWeight.Medium
         )

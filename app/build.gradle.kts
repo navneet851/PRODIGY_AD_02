@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.android.app.stopwatch"
+    namespace = "com.android.todo"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.android.app.stopwatch"
+        applicationId = "com.android.todo"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
