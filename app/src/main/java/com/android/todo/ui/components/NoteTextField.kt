@@ -40,6 +40,8 @@ fun NoteTextField(
         onValueChange = {
             text = it
         },
+        minLines = 3,
+        maxLines = 9,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = shaded,
             unfocusedContainerColor = shaded,
