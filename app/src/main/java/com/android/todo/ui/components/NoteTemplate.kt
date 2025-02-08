@@ -40,11 +40,13 @@ fun NoteTemplate(
                 .padding(10.dp),
             fontSize = 20.sp,
             text = "Note 1",
+            color = Color.Black,
             fontWeight = FontWeight.W500
 
         )
         Text(
             fontSize = 20.sp,
+            color = Color.Black,
             text = " reueyyweryweryweruiweyuiwegfugfidhf" +
                 "hhgjegfjregrehgireg" +
                 "geghiregrue" +
