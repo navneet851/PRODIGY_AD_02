@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,7 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.todo.ui.components.Chip
+import androidx.navigation.NavHostController
+import com.android.todo.data.entity.Chip
+import com.android.todo.data.entity.TodoNote
 import com.android.todo.ui.components.ChipSection
 import com.android.todo.ui.components.NoteTemplate
 import com.android.todo.ui.theme.CustomBlue
@@ -25,9 +26,8 @@ import com.android.todo.ui.theme.CustomLightYellow
 import com.android.todo.ui.theme.CustomOrange
 import com.android.todo.ui.theme.CustomYellow
 
-@Preview()
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -61,7 +61,9 @@ fun HomeScreen() {
             columns = GridCells.Fixed(2)
         ) {
             items(colors.size) {
-                NoteTemplate(color = colors[it])
+                NoteTemplate(color = colors[it]){
+                    navController.navigate(TodoNote(it, "Navneet", "tag"))
+                }
             }
 
         }

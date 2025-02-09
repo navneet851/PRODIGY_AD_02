@@ -2,6 +2,7 @@ package com.android.todo.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -20,10 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-@Preview(showBackground = true)
 @Composable
 fun NoteTemplate(
-    color : Color = MaterialTheme.colorScheme.inverseSurface
+    color : Color = MaterialTheme.colorScheme.inverseSurface,
+    onClick : () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -32,7 +33,9 @@ fun NoteTemplate(
             .clip(RoundedCornerShape(30.dp))
             .background(color)
             .padding(10.dp)
-//            .verticalScroll(rememberScrollState())
+            .clickable {
+                onClick()
+            }
 
     ) {
         Text(
