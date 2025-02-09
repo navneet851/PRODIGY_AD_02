@@ -1,15 +1,13 @@
 package com.android.todo.data.entity
 
-import androidx.compose.ui.graphics.Color
-import com.android.todo.ui.theme.CustomOrange
-import kotlinx.serialization.Contextual
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
-@Serializable
+@Entity
 data class TodoNote(
-    val id : Int,
+    @PrimaryKey(autoGenerate = true)
+    val id : Int = 0,
     val title : String,
     val tag : String,
-//    val todo : List<TodoCheckBox>,
-//    @Contextual val color : Color
 )
