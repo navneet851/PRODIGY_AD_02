@@ -5,19 +5,36 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
+import com.android.todo.data.db.TodoDatabase
 import com.android.todo.ui.navigation.MyNavHost
-import com.android.todo.ui.screens.HomeScreen
 import com.android.todo.ui.theme.TodoTheme
+import com.android.todo.ui.viewmodel.TodoViewModel
 
 class MainActivity : ComponentActivity() {
+
+    private val db by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            TodoDatabase::class.java,
+            "contacts.db"
+        ).build()
+    }
+
+    private val viewModel by viewModels<TodoViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return TodoViewModel(db.dao) as T
+                }
+            }
+        }
+    )
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +42,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TodoTheme {
-                MyNavHost()
+                val todoNotes by viewModel.todosList.collectAsState()
+                MyNavHost(viewModel)
             }
         }
     }

@@ -10,4 +10,5 @@ data class TodoNote(
     val id : Int = 0,
     val title : String,
     val tag : String,
+    val text : String,
 )

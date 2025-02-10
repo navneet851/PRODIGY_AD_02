@@ -26,12 +26,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.android.todo.R
-import com.android.todo.data.entity.TodoNote
 import com.android.todo.ui.components.NoteTextField
 import com.android.todo.ui.components.ShadowButton
 import com.android.todo.ui.components.TodoChip
@@ -39,7 +37,7 @@ import com.android.todo.ui.theme.CustomBlue
 import com.android.todo.ui.theme.shaded
 
 @Composable
-fun NoteScreen(navController: NavHostController, todoNote: TodoNote) {
+fun NoteScreen(navController: NavHostController) {
 
     Scaffold(
         modifier = Modifier
@@ -115,7 +113,7 @@ fun NoteScreen(navController: NavHostController, todoNote: TodoNote) {
             Text(
                 modifier = Modifier.padding(16.dp),
                 fontSize = 50.sp,
-                text = todoNote.title,
+                text = "navbar",
                 color = Color.Black,
                 fontWeight = FontWeight.Medium
             )

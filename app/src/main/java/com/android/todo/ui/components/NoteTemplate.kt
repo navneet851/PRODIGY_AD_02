@@ -20,10 +20,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.todo.data.entity.TodoNote
+import com.android.todo.ui.theme.CustomOrange
 
 @Composable
 fun NoteTemplate(
-    color : Color = MaterialTheme.colorScheme.inverseSurface,
+    todoNote: TodoNote,
     onClick : () -> Unit
 ) {
     Column(
@@ -31,7 +33,7 @@ fun NoteTemplate(
             .height(280.dp)
             .padding(5.dp)
             .clip(RoundedCornerShape(30.dp))
-            .background(color)
+            .background(CustomOrange)
             .padding(10.dp)
             .clickable {
                 onClick()
@@ -42,7 +44,7 @@ fun NoteTemplate(
             modifier = Modifier
                 .padding(10.dp),
             fontSize = 20.sp,
-            text = "Note 1",
+            text = todoNote.title,
             color = Color.Black,
             fontWeight = FontWeight.W500
 
@@ -50,10 +52,7 @@ fun NoteTemplate(
         Text(
             fontSize = 20.sp,
             color = Color.Black,
-            text = " reueyyweryweryweruiweyuiwegfugfidhf" +
-                "hhgjegfjregrehgireg" +
-                "geghiregrue" +
-                "ghrgb")
+            text = todoNote.text)
     }
 
 }
