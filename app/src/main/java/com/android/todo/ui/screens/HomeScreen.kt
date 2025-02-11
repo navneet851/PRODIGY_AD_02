@@ -72,7 +72,6 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
             Chip("0", false, 34)
         )
 
-        val colors = listOf(CustomOrange, CustomYellow, CustomGreen, CustomBlue, CustomLightYellow)
         Spacer(Modifier.padding(16.dp))
         Text(
             modifier = Modifier.padding(16.dp),
@@ -110,7 +109,9 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
                 }
             }
             items(todoNotes.size) {
-                NoteTemplate(todoNotes[it]) {
+                val colors = listOf(CustomOrange, CustomYellow, CustomGreen, CustomBlue, CustomLightYellow)
+                val color = colors.random()
+                NoteTemplate(todoNotes[it], color) {
                     navController.navigate("note")
                 }
             }
