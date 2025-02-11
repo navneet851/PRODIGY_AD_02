@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         Room.databaseBuilder(
             applicationContext,
             TodoDatabase::class.java,
-            "contacts.db"
+            "todo.db"
         ).build()
     }
 
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return TodoViewModel(db.dao) as T
+                    return TodoViewModel(db.todoDao) as T
                 }
             }
         }
@@ -49,16 +49,52 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//fun main() {
-//    println(linear_Search(5))
-//}
-//
-//fun linear_Search(find : Int) : String{
-//    val list = listOf(1, 2, 3, 4, 5, 6, 6)
-//    for (i in list.indices) {
-//        if (list[i] == find) {
-//            return "value find at $i location"
-//        }
-//    }
-//        return "value not find"
-//}
+fun main() {
+    val stack = Stack(6)
+    stack.print()
+    println(stack.push(999))
+    println(stack.push(234))
+    stack.print()
+    println(stack.pop())
+    stack.print()
+}
+
+
+class Stack(
+    private val max: Int = 0
+) {
+    private var top: Int? = null
+    private val stack: IntArray = IntArray(max){-1}
+
+    fun isEmpty() = top == null
+
+    fun isFull() = top == max
+
+    fun push(data: Int): String {
+        if (isFull())
+            return "overflow"
+        if (isEmpty()) {
+            stack[0] = data
+            top = 0
+            return "Pushed"
+        } else {
+            top = top?.plus(1)
+            stack[top!!] = data
+            return "Pushed"
+        }
+    }
+
+    fun pop() : String{
+        if (isEmpty()) {
+            return "Empty Stack"
+        } else {
+            stack[top!!] = -1
+            top = top?.minus(1)
+            return "Poped"
+        }
+    }
+
+    fun print(){
+        println(stack.contentToString())
+    }
+}

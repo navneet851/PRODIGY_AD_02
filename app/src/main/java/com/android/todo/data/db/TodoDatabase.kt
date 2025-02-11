@@ -9,6 +9,7 @@ import com.android.todo.data.entity.TodoNote
     version = 1
 )
 abstract class TodoDatabase : RoomDatabase() {
-    abstract val dao: TodoDao
+    abstract val todoDao: TodoDao
+    abstract val checkBoxDao: CheckBoxDao
 
 }

@@ -56,3 +56,10 @@ fun NoteTemplate(
     }
 
 }
+
+@Preview
+@Composable
+private fun NoteTemplatePreview() {
+    val todo = TodoNote(title = "navbar", tag = "imp", text = "design the navbar")
+    NoteTemplate(todo) { }
+}
