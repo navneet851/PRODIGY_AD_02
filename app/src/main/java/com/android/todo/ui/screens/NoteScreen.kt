@@ -1,6 +1,7 @@
 package com.android.todo.ui.screens
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,8 +33,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -68,15 +71,23 @@ fun NoteScreen(navController: NavHostController, viewModel: TodoViewModel, todoN
     val color by remember {
         mutableStateOf(colors.random())
     }
+
+    val focusRequester = remember { FocusRequester() }
+
     var showDailog by remember {
         mutableStateOf(false)
     }
+    val context = LocalContext.current
 
     var todoText by remember {
         mutableStateOf(todoNotes[todoNoteIndex].text)
     }
+    LaunchedEffect(todoText) {
+        viewModel.saveTodoNote(todoNotes[todoNoteIndex].copy(text = todoText))
+    }
     LaunchedEffect(true) {
         viewModel.getCheckBoxOrderByLatest(todoNotes[todoNoteIndex].id)
+//        focusRequester.requestFocus()
     }
 
     Scaffold(
@@ -87,7 +98,6 @@ fun NoteScreen(navController: NavHostController, viewModel: TodoViewModel, todoN
         topBar = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
@@ -99,17 +109,6 @@ fun NoteScreen(navController: NavHostController, viewModel: TodoViewModel, todoN
                     navController.navigateUp()
                 }
 
-                Button(
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = shaded,
-                        contentColor = Color.Black
-                    ),
-                    onClick = {
-
-                    }
-                ) {
-                    Text("Save")
-                }
             }
         },
         bottomBar = {
@@ -127,7 +126,13 @@ fun NoteScreen(navController: NavHostController, viewModel: TodoViewModel, todoN
                     image = painterResource(R.drawable.text),
                     contentDescription = "text"
                 ) {
-                    todoText = "put text here"
+                    if (todoText == ""){
+                        todoText = " "
+                    }
+                    else{
+                        focusRequester.requestFocus()
+                    }
+
                 }
                 ShadowButton(
                     modifier = Modifier
@@ -172,11 +177,11 @@ fun NoteScreen(navController: NavHostController, viewModel: TodoViewModel, todoN
                         modifier = Modifier
                             .size(35.dp),
                         image = painterResource(R.drawable.text),
-                        contentDescription = "Back"
+                        contentDescription = "text field"
                     ) { }
 
 
-                    NoteTextField(todoText) { newText ->
+                    NoteTextField(todoText, focusRequester) { newText ->
                         todoText = newText
                     }
                 }
@@ -219,7 +224,9 @@ fun NoteScreen(navController: NavHostController, viewModel: TodoViewModel, todoN
                             TodoChip(
                                 color,
                                 checkBoxList[checkBox],
-                                onChange = {},
+                                onChange = {
+                                    viewModel.saveCheckBox(checkBoxList[checkBox].copy(isChecked = it))
+                                },
                                 onDelete = {
                                     viewModel.deleteCheckBox(checkBoxList[checkBox])
                                 }
@@ -274,15 +281,20 @@ fun NoteScreen(navController: NavHostController, viewModel: TodoViewModel, todoN
                         contentColor = Color.Black
                     ),
                     onClick = {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            viewModel.saveCheckBox(
-                                CheckBox(
-                                    todoNotes[todoNoteIndex].id,
-                                    text,
-                                    false
+                        if (text == ""){
+                            Toast.makeText(context, "Field must be filled", Toast.LENGTH_SHORT).show()
+                        }
+                        else{
+                            CoroutineScope(Dispatchers.IO).launch {
+                                viewModel.saveCheckBox(
+                                    CheckBox(
+                                        todoNotes[todoNoteIndex].id,
+                                        text,
+                                        false
+                                    )
                                 )
-                            )
-                            showDailog = false
+                                showDailog = false
+                            }
                         }
 
                     }

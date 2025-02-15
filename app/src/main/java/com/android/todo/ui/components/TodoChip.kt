@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.todo.R
@@ -52,7 +53,8 @@ fun TodoChip(
 
             )
             Text(
-                text = checkBox.text
+                text = checkBox.text,
+                textDecoration = if (checkBox.isChecked) TextDecoration.LineThrough else TextDecoration.None,
             )
         }
 

@@ -17,6 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
@@ -29,12 +31,14 @@ import com.android.todo.ui.theme.shaded
 @Composable
 fun NoteTextField(
     text : String,
+    focusRequester : FocusRequester,
     onChange : (String) -> Unit
 ) {
     TextField(
         modifier = Modifier
             .padding(5.dp)
             .clip(RoundedCornerShape(20))
+            .focusRequester(focusRequester)
         ,
         value = text,
         onValueChange = {
