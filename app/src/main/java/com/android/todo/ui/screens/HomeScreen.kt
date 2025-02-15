@@ -32,12 +32,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.android.todo.data.entity.Chip
 import com.android.todo.data.entity.TodoNote
 import com.android.todo.ui.components.ChipSection
 import com.android.todo.ui.components.NoteTemplate
+import com.android.todo.ui.navigation.TodoNoteIndex
 import com.android.todo.ui.theme.CustomBlue
 import com.android.todo.ui.theme.CustomGreen
 import com.android.todo.ui.theme.CustomLightYellow
@@ -46,7 +46,6 @@ import com.android.todo.ui.theme.CustomYellow
 import com.android.todo.ui.viewmodel.TodoViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -111,13 +110,18 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
             items(todoNotes.size) {
                 val colors = listOf(CustomOrange, CustomYellow, CustomGreen, CustomBlue, CustomLightYellow)
                 val color = colors.random()
-                NoteTemplate(todoNotes[it], color) {
-                    navController.navigate("note")
+                NoteTemplate(
+                    todoNotes[it],
+                    color,
+                    onDelete = {
+                        viewModel.deleteTodoNote(todoNotes[it])
+                        viewModel.deleteCheckBoxesById(todoNotes[it].id)
+                    }
+                ) {
+                    navController.navigate(TodoNoteIndex(it))
                 }
             }
-
         }
-
     }
 
     if (showDailog) {

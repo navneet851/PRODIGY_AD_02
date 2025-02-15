@@ -2,7 +2,6 @@ package com.android.todo.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.Serializable
 
 @Entity
 data class TodoNote(

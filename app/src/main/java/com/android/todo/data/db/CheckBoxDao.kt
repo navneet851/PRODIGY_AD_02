@@ -17,6 +17,9 @@ interface CheckBoxDao {
     @Delete
     suspend fun deleteCheckBox(checkBox: CheckBox)
 
-    @Query("SELECT * FROM CheckBox ORDER BY id ASC")
-    fun getCheckBoxOrderByLatest() : Flow<List<CheckBox>>
+    @Query("SELECT * FROM CheckBox Where todoId = :todoId ORDER BY id ASC")
+    fun getCheckBoxOrderByLatest(todoId : Int) : Flow<List<CheckBox>>
+
+    @Query("DELETE FROM CheckBox WHERE todoId = :todoId")
+    suspend fun deleteCheckBoxesById(todoId: Int)
 }

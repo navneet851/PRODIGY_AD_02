@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.todo.data.db.CheckBoxDao
 import com.android.todo.data.db.TodoDao
+import com.android.todo.data.entity.CheckBox
 import com.android.todo.data.entity.TodoNote
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +20,9 @@ class TodoViewModel(
     private val _todosList: MutableStateFlow<List<TodoNote>> = MutableStateFlow(emptyList())
     val todosList: StateFlow<List<TodoNote>> = _todosList
 
+    private val _checkBoxList: MutableStateFlow<List<CheckBox>> = MutableStateFlow(emptyList())
+    val checkBoxList: StateFlow<List<CheckBox>> = _checkBoxList
+
     init {
         viewModelScope.launch {
             todoDao.getNotesOrderByLatest().collect {
@@ -28,9 +32,31 @@ class TodoViewModel(
 
     }
 
-    private val titleState: MutableState<String> = mutableStateOf("")
-    private val tagState: MutableState<String> = mutableStateOf("")
-    private val textState: MutableState<String> = mutableStateOf("")
+    fun getCheckBoxOrderByLatest(todoId : Int) {
+        viewModelScope.launch {
+            checkBoxDao.getCheckBoxOrderByLatest(todoId).collect {
+                _checkBoxList.value = it
+            }
+        }
+    }
+
+    fun deleteCheckBoxesById(todoId: Int) {
+        viewModelScope.launch {
+            checkBoxDao.deleteCheckBoxesById(todoId)
+        }
+    }
+
+    fun deleteCheckBox(checkBox: CheckBox) {
+        viewModelScope.launch {
+            checkBoxDao.deleteCheckBox(checkBox)
+        }
+    }
+
+    fun saveCheckBox(checkBox: CheckBox) {
+        viewModelScope.launch {
+            checkBoxDao.upsertCheckBox(checkBox)
+        }
+    }
 
 
     fun deleteTodoNote(todoNote: TodoNote) {

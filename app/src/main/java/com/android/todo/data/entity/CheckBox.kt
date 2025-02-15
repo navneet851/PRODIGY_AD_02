@@ -5,8 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class CheckBox(
-    @PrimaryKey()
-    val id : Int,
+    val todoId: Int,
     val text: String,
-    val isChecked: Boolean
+    val isChecked: Boolean,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0
 )

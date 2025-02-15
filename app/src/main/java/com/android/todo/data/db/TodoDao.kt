@@ -16,6 +16,6 @@ interface TodoDao {
     @Delete
     suspend fun deleteTodoNote(todoNote: TodoNote)
 
-    @Query("SELECT * FROM TodoNote ORDER BY id ASC")
+    @Query("SELECT * FROM TodoNote ORDER BY id DESC")
     fun getNotesOrderByLatest() : Flow<List<TodoNote>>
 }

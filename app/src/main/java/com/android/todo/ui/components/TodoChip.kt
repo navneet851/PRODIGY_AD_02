@@ -19,12 +19,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.todo.R
+import com.android.todo.data.entity.CheckBox
 import com.android.todo.ui.theme.CustomBlue
 import com.android.todo.ui.theme.CustomOrange
 
-@Preview
 @Composable
-fun TodoChip() {
+fun TodoChip(
+    color : Color,
+    checkBox: CheckBox,
+    onChange : (Boolean) -> Unit,
+    onDelete : () -> Unit
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -35,19 +40,19 @@ fun TodoChip() {
 
             ) {
             Checkbox(
-                checked = false,
+                checked = checkBox.isChecked,
                 onCheckedChange = {
-
+                    onChange(it)
                 },
                 colors = CheckboxDefaults.colors(
-                   checkmarkColor = CustomOrange,
+                   checkmarkColor = color,
                     checkedColor = Color.Black,
                     uncheckedColor = Color.Black
                 )
 
             )
             Text(
-                text = "navbar"
+                text = checkBox.text
             )
         }
 
@@ -55,9 +60,9 @@ fun TodoChip() {
             modifier = Modifier
                 .size(35.dp),
             image = rememberVectorPainter(Icons.Default.Delete),
-            contentDescription = "Back"
+            contentDescription = "Delete"
         ) {
-
+            onDelete()
         }
     }
 }
