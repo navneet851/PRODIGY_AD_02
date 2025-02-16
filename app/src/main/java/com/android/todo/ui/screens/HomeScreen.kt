@@ -1,6 +1,7 @@
 package com.android.todo.ui.screens
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -39,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,9 +69,10 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
     val todoNotes by viewModel.todosList.collectAsState()
     val chips by viewModel.tagList.collectAsState()
 
-    var todoTagList by rememberSaveable {
-        mutableStateOf(listOf(Chip("All", true, 20)))
-    }
+    var selectedTag by rememberSaveable { mutableStateOf("All") }
+    var todoTagList by rememberSaveable { mutableStateOf(listOf<Chip>()) }
+
+    val context = LocalContext.current
 
     Log.d("chips", chips.toString())
     var showDailog by remember {
@@ -78,15 +81,20 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
     var showAddTagDialog by remember {
         mutableStateOf(false)
     }
-    LaunchedEffect(chips) {
+    LaunchedEffect(chips, todoNotes) {
         val tagList: List<Chip> = chips.map { chip ->
             val count = todoNotes.count { it.tag == chip.tag }
-            Chip(tag = chip.tag, selected = false, count = count)
+            Chip(tag = chip.tag, selected = chip.tag == selectedTag, count = count)
         }
-        todoTagList = listOf(Chip("All", true, 20)) + tagList
+        todoTagList = listOf(Chip("All", selectedTag == "All", todoNotes.size)) + tagList
         Log.d("todoTagList", todoTagList.toString())
 
+    }
 
+    val filteredTodoNotes = if (selectedTag == "All") {
+        todoNotes
+    } else {
+        todoNotes.filter { it.tag == selectedTag }
     }
 
 
@@ -110,9 +118,18 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
         Spacer(Modifier.padding(16.dp))
 
 
-        ChipSection(todoTagList) {
-            showAddTagDialog = true
-        }
+        ChipSection(
+            chips = todoTagList,
+            onChipClick = { selectedChip ->
+                selectedTag = selectedChip.tag
+                todoTagList = todoTagList.map { chip ->
+                    chip.copy(selected = chip.tag == selectedTag)
+                }
+            },
+            onAddClick = {
+                showAddTagDialog = true
+            }
+        )
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2)
@@ -137,15 +154,15 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
                     )
                 }
             }
-            items(todoNotes.size) {
-                val colors =
-                    listOf(CustomOrange, CustomYellow, CustomGreen, CustomBlue, CustomLightYellow)
+            items(filteredTodoNotes.size) {
+                val colors = listOf(CustomOrange, CustomYellow, CustomGreen, CustomBlue, CustomLightYellow)
                 val color = colors.random()
                 NoteTemplate(
-                    todoNotes[it],
+                    filteredTodoNotes[it],
+                    color = color,
                     onDelete = {
-                        viewModel.deleteTodoNote(todoNotes[it])
-                        viewModel.deleteCheckBoxesById(todoNotes[it].id)
+                        viewModel.deleteTodoNote(filteredTodoNotes[it])
+                        viewModel.deleteCheckBoxesById(filteredTodoNotes[it].id)
                     }
                 ) {
                     navController.navigate(TodoNoteIndex(it))
@@ -187,9 +204,14 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
                         contentColor = Color.Black
                     ),
                     onClick = {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            viewModel.saveTags(Tag(tag = tag))
-                            showAddTagDialog = false
+                        if (tag == ""){
+                            Toast.makeText(context, "Field must be filled", Toast.LENGTH_SHORT).show()
+                        }
+                        else {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                viewModel.saveTags(Tag(tag = tag))
+                                showAddTagDialog = false
+                            }
                         }
 
                     }
@@ -208,7 +230,7 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
             }
         ) {
             var title by remember { mutableStateOf("") }
-            var tag by remember { mutableStateOf("") }
+            var tag by remember { mutableStateOf("All") }
             var text by remember { mutableStateOf("") }
 
             Column(
@@ -232,6 +254,9 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
                     columns = GridCells.Adaptive(90.dp)
                 ) {
                     items(todoTagList.size) {
+                        if (todoTagList[it].selected){
+                            tag = todoTagList[it].tag
+                        }
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
@@ -239,10 +264,10 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
                                 .clip(RoundedCornerShape(5.dp))
                                 .background(CustomBlue)
                                 .clickable {
-                                    tag = todoTagList[it].tag
                                     todoTagList = todoTagList.map {
                                         it.copy(selected = it.tag == tag)
                                     }
+                                    tag = todoTagList[it].tag
                                 }
                         ) {
                             Text(
@@ -266,9 +291,20 @@ fun HomeScreen(navController: NavHostController, viewModel: TodoViewModel) {
                         contentColor = Color.Black
                     ),
                     onClick = {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            viewModel.saveTodoNote(TodoNote(title = title, tag = tag, text = text))
-                            showDailog = false
+                        if (text.isEmpty() || tag.isEmpty() || title.isEmpty()){
+                            Toast.makeText(context, "Fields must be filled", Toast.LENGTH_SHORT).show()
+                        }
+                        else {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                viewModel.saveTodoNote(
+                                    TodoNote(
+                                        title = title,
+                                        tag = tag,
+                                        text = text
+                                    )
+                                )
+                                showDailog = false
+                            }
                         }
 
                     }
